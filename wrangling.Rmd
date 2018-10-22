@@ -35,8 +35,79 @@ c(nrow(gapminder), ncol(gapminder)) #combines 2 values
 
 ##Dplyr
 
-
 ```{r}
+# filter by rows
+filter(gapminder, lifeExp < 29)
+filter(gapminder, country == "Mexico")
+filter(gapminder, country == "United States")
+filter(gapminder, country %in% c("Mexico", "Peru", "Brazil"))
+filter(gapminder, country == "Mexico", year == 2002)
+filter(gapminder, country == "Mexico", year > 2000)
+
+# find mean life expectancy in Sweden
+sweden <- filter(gapminder, country == "Sweden")
+mean(sweden$lifeExp)
+
+
 
 ```
+
+
+
+```{r}
+# select by columns
+select(gapminder, year, lifeExp)
+select(gapminder, -continent, -lifeExp) #exclude unwanted columns
+
+```
+
+
+```{r}
+# use select and filter together
+gap_cambodia <- filter(gapminder, country == "Cambodia")
+gap_cambodia2 <- select(gap_cambodia, -continent, -lifeExp)
+# too verbose - need to condense it down and avoid unneeded variables
+
+```
+
+The pipe operator will change your life
+
+```{r}
+gapminder %>% head() # equivalent to head(gapminder)
+gapminder %>% head(3) # just 3 rows
+
+gap_cambodia <- gapminder %>% filter(country == "Cambodia")
+gap_cambodia2 <- gap_cambodia %>% select(-continent, -lifeExp)
+# or... finally:
+gap_cambodia <- gapminder %>% 
+  filter(country == "Cambodia") %>% 
+  select (-continent, -lifeExp)
+# keyboard shortcut for pipe is Cmd-Shft-M!
+
+```
+
+
+
+```{r}
+# Mutate adds new variables:
+gapminder %>% 
+  mutate(index = 1:nrow(gapminder))
+
+gapminder %>% 
+  mutate(planet = "Earth")
+
+gapminder %>% 
+  mutate(gdp = pop * gdpPercap)
+```
+
+challenge - find max gdpPerCap of Egype and Vietnam, create a new column
+```{r}
+gapminder %>% 
+  filter(country %in% c("Egypt", "Vietnam")) %>% 
+  mutate(gdp = pop * gdpPercap, maxgdp = max(gdp))
+
+```
+
+
+
 
