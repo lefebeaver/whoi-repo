@@ -5,6 +5,11 @@ date: "October 22, 2018"
 output: html_document
 ---
 
+
+# Learning ggplot2
+
+we're learning ggplot 2, it's going to be amazing...
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
