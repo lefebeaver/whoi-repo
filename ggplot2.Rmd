@@ -20,9 +20,245 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+
+
+```{r}
+
+# install and load tidyverse
+# install.packages('tidyverse') # n
+library(tidyverse)
+
+
+
+#National Parks in California
+ca <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/ca.csv") 
+
+#Acadia National Park
+acadia <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/acadia.csv")
+
+#Southeast US National Parks
+se <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/se.csv")
+
+#2016 Visitation for all Pacific West National Parks
+visit_16 <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/visit_16.csv")
+
+#All Nationally designated sites in Massachusetts
+mass <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/mass.csv")
+
+
 ```
+
+start with the California (ca) dataset
+
+```{r}
+# head(ca)
+View(ca)
+```
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors))
+```
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors, color = park_name))
+```
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors, color = park_name)) +
+  labs(x= "Year",
+  y = "Visitation",
+  title = "California National Park Visitation")
+```
+
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors, color = park_name)) +
+  labs(x= "Year",
+  y = "Visitation",
+  title = "California National Park Visitation") +
+  theme_bw() + # this utlized the black and white theme
+  theme(legend.title = element_blank()) #this removed the legend title
+```
+
+```{r}
+#head(se)
+ggplot(data = se) +
+  geom_point(aes(x = year, y = visitors, color = park_name)) +
+  labs(x= "Year",
+  y = "Visitation",
+  title = "Southease US National Park Visitation") +
+  theme_bw() + # this utlized the black and white theme
+  theme(legend.title = element_blank()) #this removed the legend title
+```
+
+
+```{r}
+#head(se)
+ggplot(data = se) +
+  geom_point(aes(x = year, y = visitors, color = state)) +
+  labs(x= "Year",
+  y = "Visitation",
+  title = "Southease US National Park Visitation") +
+  theme_bw() + # this utlized the black and white theme
+  theme(legend.title = element_blank()) #this removed the legend title
+```
+
+
+```{r}
+#head(se)
+ggplot(data = se) +
+  geom_point(aes(x = year, y = visitors, color = state)) +
+  labs(x= "Year",
+  y = "Visitation",
+  title = "Southeast US National Park Visitation by State") +
+  theme_minimal() + # this utlized the black and white theme
+  theme(legend.title = element_blank()) + #this removed the legend title
+  labs(x= "Year", y = "Visitation") +
+  theme(legend.title = element_blank(), 
+       axis.text.x = element_text(angle = 45, size = 14)) 
+```
+
+
+```{r}
+#trying to get more X axis labels - no
+#head(se)
+ggplot(data = se) +
+  geom_point(aes(x = year, y = visitors, color = state)) +
+  labs(x= "Year",
+  y = "Visitation",
+  title = "Southeast US National Park Visitation by State") +
+  theme_minimal() + # this utlized the black and white theme
+  theme(legend.title = element_blank()) + #this removed the legend title
+  labs(x= "Year", y = "Visitation") +
+  theme(legend.title = element_blank(), 
+      scale_x_continuous(breaks = round(seq(x), max(x), by = 20),1)) +
+       axis.text.x = element_text(angle = 45, size = 14)) 
+```
+
+
+```{r}  
+#faceting
+ggplot(data=se) + 
+  geom_point(aes(x=year, y = visitors)) +
+  facet_wrap(~ state)
+
+```
+
+
+
+```{r}  
+#faceting
+ggplot(data=se) + 
+  geom_point(aes(x=year, y = visitors, color = park_name)) +
+  facet_wrap(~ state, scales = "free")
+
+```
+
+```{r}  
+#faceting
+ggplot(data=se) + 
+  geom_point(aes(x=year, y = visitors, color = park_name)) +
+  facet_wrap(~ state, scales = "free") +
+  theme(axis.text.x = element_text(angle = 90))
+
+```
+
+
+```{r} 
+ggplot(data = se) +
+  geom_jitter(aes(x = park_name, y = visitors))
+```
+
+```{r} 
+ggplot(data = se) +
+  geom_jitter(aes(x = park_name, y = visitors), alpha = 0.4, width = 0.1) +
+  coord_flip()
+```
+
+
+
+
+
+```{r}
+ggplot(se)+
+  geom_line(aes(x=year, y=visitors, color=park_name)) +
+  theme_bw()
+```
+
+Multiple geoms on one plot
+
+```{r} 
+ggplot(data = acadia) +
+  geom_point(aes(x = year, y = visitors))
+```
+
+```{r} 
+ggplot(data = acadia) +
+  geom_point(aes(x = year, y = visitors)) +
+  geom_line(aes(x = year, y = visitors)) +
+  geom_smooth(aes(x = year, y = visitors))
+
+```
+
+setting global aesthetics up front so you don't have to retype - will use until you redefine below:
+```{r} 
+ggplot(data = acadia, aes(x = year, y = visitors)) +
+  geom_point() +
+  geom_line() +
+  geom_smooth()
+
+```
+order of operations doesn't seem to affect appearance (i.e. grey doesn't overwrite blue line)
+```{r} 
+ggplot(data = acadia, aes(x = year, y = visitors)) +
+  geom_point() +
+  geom_smooth() + 
+  geom_line()
+
+```
+
+explore the options provided by ggthemes:
+```{r} 
+install.packages("ggthemes")
+library(ggthemes)
+```
+
+
+bar charts!
+```{r} 
+ggplot(data = visit_16, aes(x = state)) +
+geom_bar()
+#View(visit_16)
+```
+
+```{r} 
+ggplot(data = visit_16, aes(x = state, y = visitors, fill = park_name)) +
+  geom_bar(stat = "identity", position = "dodge")  # dodge puts them side by side in each state
+```
+
+Save a ggplot - just assign it a name and file format
+
+```{r} 
+myplot <- ggplot(data = visit_16, aes(x = state, y = visitors, fill = park_name)) +
+  geom_bar(stat = "identity", position = "dodge")  # dodge puts them side by side in each state
+
+myplot
+
+ggsave("myplot.png", myplot)
+```
+
+```{r} 
+myplot <- ggplot(data = visit_16, aes(x = state, y = visitors, fill = park_name)) +
+  geom_bar(stat = "identity", position = "dodge")  # dodge puts them side by side in each state
+
+myplot
+
+ggsave("myplot.png", myplot, height = 5, width = 5, units = "in")
+```
+
 
 ## Including Plots
 
@@ -30,6 +266,15 @@ You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
+```
+
+```{r}
+
+```
+
+
+```{r}
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
