@@ -100,14 +100,49 @@ gapminder %>%
   mutate(gdp = pop * gdpPercap)
 ```
 
-challenge - find max gdpPerCap of Egype and Vietnam, create a new column
+challenge - find max gdpPerCap of Egypt and Vietnam, 
+solution: create a new column, calculate gdp, visually find max.
 ```{r}
 gapminder %>% 
   filter(country %in% c("Egypt", "Vietnam")) %>% 
-  mutate(gdp = pop * gdpPercap, maxgdp = max(gdp))
+  mutate(gdp = pop * gdpPercap, 
+         maxgdp = max(gdp))
+  
+  
 
 ```
+** Tuesday Session**
+## 'group_by()' groups!
 
+```{r}
+## with mutate
+gap_grouped <- gapminder %>% 
+  group_by(country) %>% 
+  mutate(gdp = pop * gdpPercap,
+         max_gdp = max(gdp)) %>% 
+  ungroup()
+View(gap_grouped)
 
+## with summarize() or summarise()
+gap_summarized <- gapminder %>% 
+  group_by(country) %>% 
+  mutate(gdp = pop * gdpPercap) %>% 
+  summarize(max_gdp = max(gdp)) %>% 
+  ungroup()
+View(gap_summarized)
+```
+
+## 'arrange()' arranges columns
+
+```{r}
+gap_summarized <- gapminder %>% 
+  group_by(country) %>% 
+  mutate(gdp = pop * gdpPercap) %>% 
+  summarize(max_gdp = max(gdp)) %>% 
+  ungroup() %>% 
+  arrange(desc(max_gdp)) # desc() orders by gdp, high to low 
+
+View(gap_summarized) 
+```
 
 
